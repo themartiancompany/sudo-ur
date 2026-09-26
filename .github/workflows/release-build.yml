@@ -1160,7 +1160,7 @@ jobs:
             ${{ github.event.release.upload_url }}
             # ${{ steps.create_release.outputs.upload_url }}
           asset_path:
-            "android-sudo-android-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
+            "sudo-android-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
           asset_name:
             "dogeos-android-sudo-android-${{ steps.version.outputs.version }}-any.pkg.tar.xz"
           asset_content_type:
