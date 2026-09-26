@@ -104,6 +104,7 @@ if [[ ! -v "_evmfs" ]]; then
   fi
 fi
 _pkg=sudo
+_pkg_alt=tsu
 if [[ ! -v "_android" ]]; then
   _android="false"
   if [[ "${_os}" == "Android" ]]; then
@@ -195,7 +196,7 @@ _gnu_commit="8019c5760f7fcdeb3618e48860f5a0be87f49e2c"
 _android_ver=1.2.0
 _android_commit="50b2ec4455b63e3a117d8a1ca7025c3cc8923322"
 pkgver="1000000.g${_gnu_ver}.a${_android_ver}"
-pkgrel=19
+pkgrel=20
 _pkgdesc=(
   "Give certain users the"
   "ability to run some commands as root."
@@ -501,6 +502,11 @@ package_sudo() {
 package_sudo-android() {
   local \
     _make_opts=()
+  provides=(
+    "${_pkg}=${_android_ver}"
+    "${_pkg}-gnu=${_gnu_ver}"
+    "${_pkg_alt}=${_android_ver}"
+  )
   _make_opts+=(
   #   "SUDO_PKG__VERSION=${TERMUX_PKG_VERSION}"
   #   "SUDO_PKG__ARCH=${TERMUX_ARCH}"
