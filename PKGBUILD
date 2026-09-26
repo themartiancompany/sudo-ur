@@ -195,7 +195,7 @@ _gnu_commit="8019c5760f7fcdeb3618e48860f5a0be87f49e2c"
 _android_ver=1.2.0
 _android_commit="50b2ec4455b63e3a117d8a1ca7025c3cc8923322"
 pkgver="1000000.g${_gnu_ver}.a${_android_ver}"
-pkgrel=18
+pkgrel=19
 _pkgdesc=(
   "Give certain users the"
   "ability to run some commands as root."
@@ -394,7 +394,6 @@ build() {
       --with-vardir="/var/db/${_pkg}"
       --with-logfac="auth"
       --enable-tmpfiles.d
-      --with-pam
       --with-sssd
       --with-ldap
       --with-ldap-conf-file="/etc/openldap/ldap.conf"
@@ -403,7 +402,18 @@ build() {
       --with-secure-path-value="/usr/local/sbin:/usr/local/bin:/usr/bin"
       --with-all-insults
     )
+    # Also probably on Android
+    # if we ever build the GNU
+    # implementation on there
+    # to rather than the wrapper.
+    if [[ "${_os}" != "Msys" ]]; then
+      _configure_opts+=(
+        --with-pam
+      )
+    fi
     if [[ "${_compiler}" == "gcc" ]]; then
+      # Need for this flag is unreported
+      # on Arch Linux
       _cflags+=(
         -Wno-old-style-definition
       )
