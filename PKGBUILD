@@ -195,7 +195,7 @@ _gnu_commit="8019c5760f7fcdeb3618e48860f5a0be87f49e2c"
 _android_ver=1.2.0
 _android_commit="50b2ec4455b63e3a117d8a1ca7025c3cc8923322"
 pkgver="1000000.g${_gnu_ver}.a${_android_ver}"
-pkgrel=14
+pkgrel=15
 _pkgdesc=(
   "Give certain users the"
   "ability to run some commands as root."
@@ -214,6 +214,11 @@ if [[ "${_gnu}" == "true" ]]; then
     "pentium4"
     "powerpc"
     "x86_64"
+  )
+fi
+if [[ "${_android}" == "true" ]]; then
+  arch+=(
+    "any"
   )
 fi
 _gnu_url="https://www.${_pkg}.ws/${_pkg}"
@@ -487,21 +492,23 @@ package_sudo-android() {
   local \
     _make_opts=()
   _make_opts+=(
-    "SUDO_PKG__VERSION=${TERMUX_PKG_VERSION}"
-    "SUDO_PKG__ARCH=${TERMUX_ARCH}"
-    "TERMUX__NAME=${TERMUX__NAME}"
-    "TERMUX__LNAME=${TERMUX__LNAME}"
-    "TERMUX_APP__NAME=${TERMUX_APP__NAME}"
-    "TERMUX_APP__PACKAGE_NAME=${TERMUX_APP__PACKAGE_NAME}"
-    "TERMUX_APP__DATA_DIR=${TERMUX_APP__DATA_DIR}"
-    "TERMUX__ROOTFS=${TERMUX__ROOTFS}"
-    "TERMUX__HOME=${TERMUX__HOME}"
-    "TERMUX__PREFIX=${TERMUX__PREFIX}"
-    "TERMUX_ENV__S_ROOT=${TERMUX_ENV__S_ROOT}"
-    "TERMUX_ENV__SS_TERMUX=${TERMUX_ENV__SS_TERMUX}"
-    "TERMUX_ENV__S_TERMUX=${TERMUX_ENV__S_TERMUX}"
-    "TERMUX_ENV__SS_TERMUX_APP=${TERMUX_ENV__SS_TERMUX_APP}"
-    "TERMUX_ENV__S_TERMUX_APP=${TERMUX_ENV__S_TERMUX_APP}"
+  #   "SUDO_PKG__VERSION=${TERMUX_PKG_VERSION}"
+  #   "SUDO_PKG__ARCH=${TERMUX_ARCH}"
+  #   "TERMUX__NAME=${TERMUX__NAME}"
+  #   "TERMUX__LNAME=${TERMUX__LNAME}"
+  #   "TERMUX_APP__NAME=${TERMUX_APP__NAME}"
+  #   "TERMUX_APP__PACKAGE_NAME=${TERMUX_APP__PACKAGE_NAME}"
+  #   "TERMUX_APP__DATA_DIR=${TERMUX_APP__DATA_DIR}"
+  #   "TERMUX__ROOTFS=${TERMUX__ROOTFS}"
+  #   "TERMUX__HOME=${TERMUX__HOME}"
+  #   "TERMUX__PREFIX=${TERMUX__PREFIX}"
+  #   "TERMUX_ENV__S_ROOT=${TERMUX_ENV__S_ROOT}"
+  #   "TERMUX_ENV__SS_TERMUX=${TERMUX_ENV__SS_TERMUX}"
+  #   "TERMUX_ENV__S_TERMUX=${TERMUX_ENV__S_TERMUX}"
+  #   "TERMUX_ENV__SS_TERMUX_APP=${TERMUX_ENV__SS_TERMUX_APP}"
+  #   "TERMUX_ENV__S_TERMUX_APP=${TERMUX_ENV__S_TERMUX_APP}"
+    DESTDIR="${pkgdir}"
+    PREFIX="/usr"
   )
   cd \
     "${_tarname}"
@@ -509,16 +516,25 @@ package_sudo-android() {
     all
   tree \
     .
+  make \
+    "${_make_opts[@]}" \
+    install
+  if [[ -e "build/${_pkg}" ]]; then
+    install \
+      -vDm755 \
+      "bin/${_pkg}" \
+      "${pkgdir}/usr/bin/${_pkg}"
+  fi
 	install \
     -vdm755 \
     "${pkgdir}/usr/share/licenses/${pkgname}/licenses"
   install \
-    -Dm644 \
+    -vDm644 \
     "LICENSE" \
     -t \
     "${pkgdir}/usr/share/licenses/${pkgname}"
   cp \
-    -r \
+    -rv \
     "licenses/"* \
     "${pkgdir}/usr/share/licenses/${pkgname}/licenses"
 }
