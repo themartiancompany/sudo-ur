@@ -195,7 +195,7 @@ _gnu_commit="8019c5760f7fcdeb3618e48860f5a0be87f49e2c"
 _android_ver=1.2.0
 _android_commit="50b2ec4455b63e3a117d8a1ca7025c3cc8923322"
 pkgver="1000000.g${_gnu_ver}.a${_android_ver}"
-pkgrel=12
+pkgrel=13
 _pkgdesc=(
   "Give certain users the"
   "ability to run some commands as root."
@@ -263,7 +263,9 @@ _tarname="${_pkg}-${_tag}"
 if [[ "${_release}" == "true" ]]; then
   _tarname="${_pkg}-${_sudover}"
 fi
+_tarname_android="${_pkg}-android-${_tag}"
 _tarfile="${_tarname}.${_archive_format}"
+_tarfile_android="${_tarname_android}.${_archive_format}"
 _github_sum="SKIP"
 source=(
 )
@@ -341,7 +343,7 @@ if [[ "${_android}" == "true" ]]; then
           _uri="${_url}-android/-/archive/${_tag}/${_tag}.${_archive_format}"
         fi
       fi
-      _src="${_tarfile}::${_uri}"
+      _src="${_tarfile_android}::${_uri}"
     fi
   fi
   source+=(
@@ -416,6 +418,7 @@ build() {
     make
   fi
   if [[ "${_android}" == "true" ]]; then
+    ls
     cd \
       "${_tarname}"
     make \
