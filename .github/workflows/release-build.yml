@@ -2346,16 +2346,16 @@ jobs:
                   "name")"; \
             echo \
               "Installing MinGW '${_depend_name}' build dependency with fur."; \
-              fur \
-                -v \
-                -t \
-                  "ci" \
-                -m \
-                  "github" \
-                -p \
-                  "pacman" \
-                "${_depend_name}" || \
-              true; \
+            fur \
+              -v \
+              -t \
+                "ci" \
+              -m \
+                "github" \
+              -p \
+                "pacman" \
+              "${_depend_name}" || \
+            true; \
           done
       - name:
           Builds the Windows package.
@@ -2363,53 +2363,107 @@ jobs:
           mkdir \
             -p \
             "/root/temp"
-          cp \
-            -r \
-            * \
-            "/root/temp"
-          dos2unix \
-            "PKGBUILD"
-          cp \
-            "PKGBUILD" \
-            "PKGBUILD.windows"
-          cp \
-            -r \
-            "/root/temp/"* \
-            "."
-          mv \
-            "PKGBUILD.windows" \
-            "PKGBUILD"
-          rm \
-            -rf \
-            "/root/temp"
+          # sha256sum \
+          #   "arch-meson"
+          # dos2unix \
+          #   "arch-meson"
+          # sha256sum \
+          #   "${PWD}/"* || \
+          #   true
+          # cp \
+          #   -v \
+          #   -r \
+          #   "${PWD}/* \
+          #   "/root/temp" || \
+          #   true
+          # dos2unix \
+          #   "PKGBUILD" || \
+          # true
+          # recipe-get \
+          #   -v \
+          #   "PKGBUILD" \
+          #   "sha256sums"
+          # cp \
+          #   "PKGBUILD" \
+          #   "PKGBUILD.windows"
+          # cp \
+          #   -v \
+          #   -r \
+          #   "/root/temp/"* \
+          #   "."
+          # mv \
+          #   "PKGBUILD.windows" \
+          #   "PKGBUILD"
+          # rm \
+          #   -rf \
+          #   "/root/temp"
           # export \
           #   _pkgbase="$( \
           #     recipe-get \
           #       "PKGBUILD" \
           #       "pkgbase")"
-          echo \
-            "$(uname \
-                 -o)"
-          _evmfs="false" \
-          _git_service="github" \
-          recipe-get \
+          # echo \
+          #   "$(uname \
+          #        -o)"
+          # _evmfs="false" \
+          # _git_service="github" \
+          # recipe-get \
+          #   -v \
+          #   "PKGBUILD" \
+          #   "source"
+          # _evmfs="false" \
+          # _git_service="github" \
+          # recipe-get \
+          #   -v \
+          #   "PKGBUILD" \
+          #   "sha256sums"
+          # PKGEXT='.pkg.tar.xz' \
+          # _evmfs="false" \
+          # _git="false" \
+          # _git_service="github" \
+          export \
+            _oldpwd="${PWD}" && \
+          cd \
+            "/root/package.orig"; \
+          dos2unix \
+            "PKGBUILD"; \
+          cp \
             -v \
+            -r \
             "PKGBUILD" \
-            "source"
-          _evmfs="false" \
-          _git_service="github" \
-          recipe-get \
-            -v \
-            "PKGBUILD" \
-            "sha256sums"
+            "${_oldpwd}/PKGBUILD"; \
+          cd \
+            "${_oldpwd}"; \
+          export \
+            _pkgbase="$( \
+              recipe-get \
+                "PKGBUILD" \
+                "pkgbase")" && \
+          if [[ "${{ env.sys }}" == "MSYS" ]]; then \
+            _msys2_libc="msys2"; \
+          elif [[ "${{ env.sys }}" == "mingw64" ]]; then \
+            _msys2_libc="mingw64"; \
+          fi; \
           PKGEXT='.pkg.tar.xz' \
           _evmfs="false" \
           _git="false" \
           _git_service="github" \
-          makepkg \
+          PKGEXT=".pkg.tar.xz" \
+          reallymakepkg \
+            -v \
+            -w \
+              "${HOME}/${_pkgbase}-build" \
+            -u \
+            -G \
+              "${_msys2_libc}" \
+            -- \
             -df \
             --nocheck \
             --skippgpcheck
+          # makepkg \
+          #   -df \
+          #   --nocheck \
+          #   --skippgpcheck; \
           ls \
             -lsh
       - name:
