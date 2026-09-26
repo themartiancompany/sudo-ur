@@ -122,7 +122,7 @@ fi
 if [[ ! -v "_git" ]]; then
   _git="false"
   if [[ "${_gnu}" == "true" ]]; then
-    _git="true"
+    _git="false"
   fi
 fi
 if [[ ! -v "_release" ]]; then
@@ -130,7 +130,7 @@ if [[ ! -v "_release" ]]; then
   if [[ "${_gnu}" == "true" ]]; then
     if [[ "${_git}" == "false" ]]; then
       _release="true"
-    elif [[ "${_git}" == "false" ]]; then
+    elif [[ "${_git}" == "true" ]]; then
       _release="false"
     fi
   fi
@@ -195,7 +195,7 @@ _gnu_commit="8019c5760f7fcdeb3618e48860f5a0be87f49e2c"
 _android_ver=1.2.0
 _android_commit="50b2ec4455b63e3a117d8a1ca7025c3cc8923322"
 pkgver="1000000.g${_gnu_ver}.a${_android_ver}"
-pkgrel=11
+pkgrel=12
 _pkgdesc=(
   "Give certain users the"
   "ability to run some commands as root."
